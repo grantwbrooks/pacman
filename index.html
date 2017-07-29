@@ -39,8 +39,13 @@
                 position: absolute;
 
             }
-            div.empty{
-            
+            div.cherry{
+                background: url('cherry.png');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+                width: 20px;
+                height: 20px;
             }
 
             div#score{
@@ -73,11 +78,11 @@
                 [2,2,2,2,2,2,2,2,2,2],
                 [2,1,1,1,1,2,1,1,1,2],
                 [2,1,1,2,1,2,1,1,1,2],
-                [2,1,1,1,1,2,1,1,1,2],
+                [2,1,3,1,1,2,1,1,1,2],
                 [2,1,2,1,1,2,1,1,1,2],
                 [2,1,1,2,1,2,1,1,1,2],
                 [2,1,1,1,1,1,2,2,1,2],
-                [2,1,1,1,1,1,1,1,1,2],
+                [2,1,3,1,1,1,1,1,1,2],
                 [2,1,1,1,1,1,1,1,1,2],
                 [2,2,2,2,2,2,2,2,2,2]
             ];
@@ -88,7 +93,8 @@
 
             var pacman = {
                 x: 1,
-                y: 1
+                y: 1,
+                r: 0
             };
 
             function displayworld(){
@@ -103,6 +109,9 @@
                         else if(world[i][j]==1)
                             output += "<div class='coin'></div>";
 
+                        else if(world[i][j]==3)
+                            output += "<div class='cherry'></div>";
+
                         if(world[i][j]==0)
                             output += "<div class='empty'></div>";
                         
@@ -116,6 +125,8 @@
             function displayPacman(){
                 document.getElementById('pacman').style.top = pacman.y*20+"px";
                 document.getElementById('pacman').style.left = pacman.x*20+"px";
+                document.getElementById('pacman').style.transform = "rotate("+pacman.r+"deg)";
+
             }
             function displayScore(){
                 document.getElementById('score').innerHTML = score;
@@ -128,24 +139,37 @@
             document.onkeydown = function(e){
                 if(e.keyCode == 37 && world[pacman.y][pacman.x-1] != 2){
                     pacman.x --;
+                    pacman.r = 180;
                 }
                 else if(e.keyCode == 39 && world[pacman.y][pacman.x+1] != 2){
                     pacman.x ++;
+                    pacman.r = 0;
                 }
                 else if(e.keyCode == 38 && world[pacman.y-1][pacman.x] != 2){
                     pacman.y --;
+                    pacman.r = -90;
                 }
                 else if(e.keyCode == 40 && world[pacman.y+1][pacman.x] != 2){
                     pacman.y ++;
+                    pacman.r = 90;
                 }
 
 
                 if(world[pacman.y][pacman.x] == 1){
                     world[pacman.y][pacman.x] = 0;
                     score+=10;
+                    
                     displayworld();
                     displayScore();
                 }
+                else if(world[pacman.y][pacman.x] == 3){
+                    world[pacman.y][pacman.x] = 0;
+                    score+=50;
+                    
+                    displayworld();
+                    displayScore();
+                }
+                
 
                 displayPacman();
                 console.log(e.keyCode);
